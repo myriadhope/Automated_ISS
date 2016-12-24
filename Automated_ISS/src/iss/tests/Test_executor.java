@@ -2,11 +2,6 @@ package iss.tests;
 
 import java.util.ArrayList;
 
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
 public class Test_executor implements Runnable {
 
 	private Thread t;
@@ -29,25 +24,15 @@ public class Test_executor implements Runnable {
 	      System.out.println("Running " +  thread_name );
 	      try {
 	    	  
-	  		//Create firefox driver to drive the browser
-	    	
-	  		System.setProperty("webdriver.chrome.driver", "E:\\Celestica\\Selenium\\Selenium\\Selenium\\chromedriver\\chromedriver_win32\\chromedriver.exe");
-	  		WebDriver driver = new ChromeDriver();
+	  		//Create firefox driver to drive the browser	    
+	    	// below is the test sequence.
+	    	// each test is executing from top to bottom
+	    	Test_cases test_case = new Test_cases(thread_name, thread_num, units);
+	    	test_case.open_chrome_browser();	  	
+	    	test_case.load_scanin();
+	    	test_case.start_unit();
+	    	test_case.monitor_test();
 	  		
-	  		//Open Google home page
-	  		String url = "http://"+units.get(thread_num).get_ip();
-	  		driver.get(url);
-	  		units.get(thread_num).calculate_window_size();
-	  		int width = units.get(thread_num).get_window_width();
-	  		int height = units.get(thread_num).get_window_height();
-	  		int x = units.get(thread_num).get_window_x();
-	  		int y = units.get(thread_num).get_window_y();
-	  		System.out.println("width=" + width);
-	  		System.out.println("height=" + height);
-	  		System.out.println("x="+x);
-	  		System.out.println("y="+y);
-	  		driver.manage().window().setSize(new Dimension(width,height));
-	  		driver.manage().window().setPosition(new Point(x,y));
 	  		Thread.sleep(500);
 	  		
 	      }catch (InterruptedException e) {

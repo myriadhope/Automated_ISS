@@ -2,11 +2,6 @@ package iss.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 public class iss_main {
 

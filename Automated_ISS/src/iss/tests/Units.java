@@ -89,23 +89,17 @@ public class Units {
 		double monitor_height = screenSize.getHeight();
 		if (this.total_units % 2 == 0) {
 			switch(total_units) {
+				case 0 :
+					System.exit(0);
+					break;
 				case 2 :
-					System.out.println("serial" + unit_num + "=" + serial);
-					System.out.println("monitor_width" + unit_num + "=" + monitor_width);
-					System.out.println("monitor_height" + unit_num + "=" + monitor_height);
 					this.window_width = (int) monitor_width / 2;
 					this.window_height = (int) monitor_height;
 					this.window_x = this.window_width * this.unit_num;
 					this.window_y = 0;
-					
-					System.out.println("window_width" + unit_num + "=" + this.window_width);
-					System.out.println("window_height" + unit_num + "=" + this.window_height);
-					System.out.println("window_x" + unit_num + "=" + this.window_x);
-					System.out.println("window_y" + unit_num + "=" + this.window_y);
 					break;
 				
 				case 4 :
-					System.out.println("serial11" + unit_num + "=" + serial);
 					this.window_width = (int) monitor_width / 2;
 					this.window_height = (int) monitor_height / 2;
 					if (this.unit_num < 2) {
@@ -118,7 +112,6 @@ public class Units {
 					break;
 					
 				case 6 :
-					System.out.println("serial12" + unit_num + "=" + serial);
 					this.window_width = (int) monitor_width / 3;
 					this.window_height = (int) monitor_height / 2;
 					if (this.unit_num < 3) {
@@ -130,7 +123,6 @@ public class Units {
 					}
 					break;
 				case 8 :
-					System.out.println("serial13" + unit_num + "=" + serial);
 					this.window_width = (int) monitor_width / 4;
 					this.window_height = (int) monitor_height / 2;
 					if (this.unit_num < 4) {
@@ -146,30 +138,35 @@ public class Units {
 		} else {
 			switch(total_units) {
 				case 1 :
-					System.out.println("serial14" + unit_num + "=" + serial);
 					this.window_width = (int) monitor_width;
 					this.window_height = (int) monitor_height;
+					this.window_x = 0;
+					this.window_y = 0;
 					break;
 				
 				case 3 :
-					System.out.println("serial15" + unit_num + "=" + serial);
-					this.window_width = (int) monitor_width / 2;
-					this.window_height = (int) monitor_height / 2;
+					this.window_width = (int) monitor_width / 3;
+					this.window_height = (int) monitor_height;
+					this.window_x = this.window_width * this.unit_num;
+					this.window_y = 0;
 					break;
 				case 5 :
-					System.out.println("serial16" + unit_num + "=" + serial);
-					this.window_width = (int) monitor_width / 3;
-					this.window_height = (int) monitor_height / 2;
+					this.window_width = (int) monitor_width / 5;
+					this.window_height = (int) monitor_height;
+					this.window_x = this.window_width * this.unit_num;
+					this.window_y = 0;
 					break;
 				case 7 :
-					System.out.println("serial17" + unit_num + "=" + serial);
-					this.window_width = (int) monitor_width / 4;
-					this.window_height = (int) monitor_height / 2;
+					this.window_width = (int) monitor_width / 7;
+					this.window_height = (int) monitor_height;
+					this.window_x = this.window_width * this.unit_num;
+					this.window_y = 0;
 					break;
 				case 9 :
-					System.out.println("serial18" + unit_num + "=" + serial);
-					this.window_width = (int) monitor_width / 4;
-					this.window_height = (int) monitor_height / 2;
+					this.window_width = (int) monitor_width / 9;
+					this.window_height = (int) monitor_height;
+					this.window_x = this.window_width * this.unit_num;
+					this.window_y = 0;
 					break;
 			}
 		}

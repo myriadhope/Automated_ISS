@@ -2,7 +2,6 @@ package iss.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.FileReader;
@@ -11,19 +10,16 @@ import java.io.BufferedReader;
 public class Parse_config {
 
 		private String path;
-		private String config_content;
 		private ArrayList<Units> units = new ArrayList<Units>();
 		public Units unit;
 		
 		public Parse_config (String file_path) {
-			config_content = "";
 			path = file_path;
 		}
 		
-		public ArrayList Parse_content () throws IOException {
+		public ArrayList<Units> Parse_content () throws IOException {
 						
 			try {
-				int unit_index = -1;
 				FileReader input = new FileReader(path);
 				BufferedReader input_file = new BufferedReader(input);
 				String line;
@@ -79,6 +75,7 @@ public class Parse_config {
 					
 					
 				}
+				input_file.close();
 				return units;
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
