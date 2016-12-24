@@ -24,18 +24,17 @@ public class Test_executor implements Runnable {
 	      System.out.println("Running " +  thread_name );
 	      try {
 	    	  
-	  		//Create firefox driver to drive the browser	    
-	    	// below is the test sequence.
-	    	// each test is executing from top to bottom
-	    	Test_cases test_case = new Test_cases(thread_name, thread_num, units);
-	    	test_case.open_chrome_browser();	  	
-	    	test_case.load_scanin();
-	    	test_case.start_unit();
-	    	test_case.monitor_test();
+	    	int seq_loop = 0;
+	    	while (seq_loop < units.get(thread_num).get_total_test_seq()) { 	    	  
+	    		
+	    		Test_profile test_profile = new Test_profile(thread_name, thread_num, units, seq_loop);
+	    		test_profile.Test_profile_exec();	  		
+	  			
+	    		Thread.sleep(500);
+	  			seq_loop++;
+	    	}
 	  		
-	  		Thread.sleep(500);
-	  		
-	      }catch (InterruptedException e) {
+	      } catch (InterruptedException e) {
 	         System.out.println("Thread " +  thread_name + " interrupted.");
 	      }
 	      System.out.println("Thread " +  thread_name + " exiting.");

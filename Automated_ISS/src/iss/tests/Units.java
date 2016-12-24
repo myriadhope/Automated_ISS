@@ -13,6 +13,8 @@ public class Units {
 	private int window_height;
 	private int window_x;
 	private int window_y;
+	private int total_test_seq;
+	
 	
 	private String serial;
 	private String slot;
@@ -30,15 +32,8 @@ public class Units {
 		id = "";
 		part_num = "";
 		encl_11s = "";
+		total_test_seq = 0;
 	}
-	
-	public Units (String serial, String slot, String ip) {
-		this.serial = serial;
-		this.slot = slot;
-		this.ip = ip;
-		
-	}
-	
 	
 	public void add_serial(String serial) {
 		this.serial = serial;		
@@ -63,6 +58,7 @@ public class Units {
 	}
 	public void add_test_seq(String test_seq) {
 		this.test_seq = Arrays.asList(test_seq.split(","));
+		this.total_test_seq = this.test_seq.size();
 	}
 
 	public void add_unit_num(int unit_number) {
@@ -100,6 +96,14 @@ public class Units {
 	
 	public int get_window_y() {
 		return this.window_y;
+	}
+	
+	public List<String> get_test_seq() {
+		return this.test_seq;
+	}
+	
+	public int get_total_test_seq() {
+		return this.total_test_seq;
 	}
 	
 	public void calculate_window_size() {
