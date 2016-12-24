@@ -2,6 +2,8 @@ package iss.tests;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.Arrays;
+import java.util.List;
 
 public class Units {
 
@@ -15,14 +17,19 @@ public class Units {
 	private String serial;
 	private String slot;
 	private String ip;
+	private String id;
+	private String part_num;
+	private String encl_11s;
+	private List<String> test_seq;
 	
 	public Units() {
 		serial = "";
 		slot = "";
 		unit_num = 0;
 		total_units = 0;
-		
-		
+		id = "";
+		part_num = "";
+		encl_11s = "";
 	}
 	
 	public Units (String serial, String slot, String ip) {
@@ -43,6 +50,19 @@ public class Units {
 	
 	public void add_ip(String ip) {
 		this.ip = ip;		
+	}
+	
+	public void add_id(String id) {
+		this.id = id;		
+	}
+	public void add_part_num(String part_num) {
+		this.part_num = part_num;		
+	}
+	public void add_encl_11s(String encl_11s) {
+		this.encl_11s = encl_11s;		
+	}
+	public void add_test_seq(String test_seq) {
+		this.test_seq = Arrays.asList(test_seq.split(","));
 	}
 
 	public void add_unit_num(int unit_number) {
