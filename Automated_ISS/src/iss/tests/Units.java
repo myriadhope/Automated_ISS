@@ -82,6 +82,18 @@ public class Units {
 		return this.ip;
 	}
 
+	public String get_id() {
+		return this.id;
+	}
+	
+	public String get_encl_11s() {
+		return this.encl_11s;
+	}
+
+	public String get_part_num() {
+		return this.part_num;
+	}
+	
 	public int get_window_width() {
 		return this.window_width;
 	}
@@ -198,4 +210,3 @@ public class Units {
 	}
 	
 }
-

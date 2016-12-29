@@ -8,7 +8,16 @@ public class iss_main {
 	public static void main(String[] args) throws InterruptedException, IOException {
 		// TODO Auto-generated method stub
 
-		Parse_config config = new Parse_config("E:\\Celestica\\temp\\test.txt");
+		String os = System.getProperty("os.name");
+		System.out.println("os=" + os);
+		String config_path = null;
+		if (os.equals("Linux")) {
+			config_path = "/tmp/test.txt";
+		} else {
+			config_path = "E:\\Celestica\\temp\\test.txt";
+		}
+		
+		Parse_config config = new Parse_config(config_path);
 		ArrayList<Units> units = config.Parse_content();			
 		
 		int total_units = units.size();		
