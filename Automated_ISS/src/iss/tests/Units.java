@@ -22,6 +22,7 @@ public class Units {
 	private String id;
 	private String part_num;
 	private String encl_11s;
+	private String hba_loc;
 	private List<String> test_seq;
 	
 	public Units() {
@@ -60,7 +61,11 @@ public class Units {
 		this.test_seq = Arrays.asList(test_seq.split(","));
 		this.total_test_seq = this.test_seq.size();
 	}
-
+	public void add_hba_loc(String hba_loc) {
+		this.hba_loc = hba_loc;
+		
+	}
+	
 	public void add_unit_num(int unit_number) {
 		this.unit_num = unit_number;		
 	}
@@ -94,6 +99,9 @@ public class Units {
 		return this.part_num;
 	}
 	
+	public String get_hba_loc() {
+		return this.hba_loc;
+	}
 	public int get_window_width() {
 		return this.window_width;
 	}

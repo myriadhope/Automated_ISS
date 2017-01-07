@@ -23,28 +23,30 @@ public class Parse_config {
 				FileReader input = new FileReader(path);
 				BufferedReader input_file = new BufferedReader(input);
 				String line;
+
+				String unit_pattern = "^Unit\\d+:";
+				String serial_pattern = "Serial=(.*)";
+				String slot_pattern = "Slot=(.*)";
+				String ip_pattern = "Tester_ip=(.*)";
+				String end_pattern = "^End:";
+				String op_id_pattern = "Operator_ID=(.*)";
+				String part_Num_pattern = "Part_Number=(.*)";
+				String Enclosure_11S_pattern= "Enclosure_11S=(.*)";
+				String test_sequence_pattern= "Test_Sequence=(.*)";
+				String hba_loc_pattern= "HBA_Location=(.*)";
+					
+				Pattern unit_p = Pattern.compile(unit_pattern);
+				Pattern serial_p = Pattern.compile(serial_pattern);
+				Pattern slot_p = Pattern.compile(slot_pattern);
+				Pattern ip_p = Pattern.compile(ip_pattern);
+				Pattern end_p = Pattern.compile(end_pattern);
+				Pattern id_p = Pattern.compile(op_id_pattern);
+				Pattern part_p = Pattern.compile(part_Num_pattern);
+				Pattern encl_11s_p = Pattern.compile(Enclosure_11S_pattern);
+				Pattern test_seq_p = Pattern.compile(test_sequence_pattern);
+				Pattern hba_loc_p = Pattern.compile(hba_loc_pattern);
+				
 				while ((line = input_file.readLine()) != null) {
-					String unit_pattern = "^Unit\\d+:";
-					String serial_pattern = "Serial=(.*)";
-					String slot_pattern = "Slot=(.*)";
-					String ip_pattern = "Tester_ip=(.*)";
-					String end_pattern = "^End:";
-					String op_id_pattern = "Operator_ID=(.*)";
-					String part_Num_pattern = "Part_Number=(.*)";
-					String Enclosure_11S_pattern= "Enclosure_11S=(.*)";
-					String test_sequence_pattern= "Test_Sequence=(.*)";
-					
-					
-										
-					Pattern unit_p = Pattern.compile(unit_pattern);
-					Pattern serial_p = Pattern.compile(serial_pattern);
-					Pattern slot_p = Pattern.compile(slot_pattern);
-					Pattern ip_p = Pattern.compile(ip_pattern);
-					Pattern end_p = Pattern.compile(end_pattern);
-					Pattern id_p = Pattern.compile(op_id_pattern);
-					Pattern part_p = Pattern.compile(part_Num_pattern);
-					Pattern encl_11s_p = Pattern.compile(Enclosure_11S_pattern);
-					Pattern test_seq_p = Pattern.compile(test_sequence_pattern);
 					
 					Matcher unit_m = unit_p.matcher(line);
 					Matcher serial_m = serial_p.matcher(line);
@@ -55,6 +57,7 @@ public class Parse_config {
 					Matcher part_m = part_p.matcher(line);
 					Matcher encl_11s_m = encl_11s_p.matcher(line);	
 					Matcher test_seq_m = test_seq_p.matcher(line);
+					Matcher hba_loc_m = hba_loc_p.matcher(line);
 					
 					System.out.println("line = " + line);
 					
@@ -96,6 +99,11 @@ public class Parse_config {
 						System.out.println("Found value: " + test_seq_m.group(1));
 				        System.out.println("");
 				        unit.add_test_seq(test_seq_m.group(1));
+						
+					} else if (hba_loc_m.matches()) {						
+						System.out.println("Found value: " + hba_loc_m.group(1));
+				        System.out.println("");
+				        unit.add_hba_loc(hba_loc_m.group(1));
 						
 					} else if (end_m.matches()) {
 						System.out.println("Found End");

@@ -19,8 +19,7 @@ public class Error_handler {
 	
 	public void analyze(String stage) {
 		
-		if (stage.equals("scanin")) {
-			
+		if (stage.equals("scanin")) {			
 			System.out.println(driver.findElement(By.tagName("body")).getText());
 			this.error_msg = driver.findElement(By.tagName("body")).getText();
 		}

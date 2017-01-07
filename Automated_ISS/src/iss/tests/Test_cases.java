@@ -1,14 +1,29 @@
 package iss.tests;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 
 public class Test_cases {
@@ -41,7 +56,9 @@ public class Test_cases {
 		
 		String url = "http://"+units.get(thread_num).get_ip();	
   		System.setProperty("webdriver.chrome.driver", driver_path);
-  		this.driver = new ChromeDriver();
+  		DesiredCapabilities dc = new DesiredCapabilities();
+  		dc.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.IGNORE);
+  		this.driver = new ChromeDriver(dc);
   		driver.get(url);
   		units.get(thread_num).calculate_window_size();
   		int width = units.get(thread_num).get_window_width();
@@ -52,6 +69,10 @@ public class Test_cases {
   		driver.manage().window().setPosition(new Point(x,y));
 	}
 	
+	public void close_chrome_browser() {
+		driver.quit();
+		
+	}
 	
 	public void load_scanin(String url) {
 		//initialize 
@@ -133,49 +154,168 @@ public class Test_cases {
 		
 	}
 	
-	public void start_unit(String url) {
+	public void start_unit() {
 		// initialize
 		Select select;
-
+		
 		// move to url
+		String url = "http://" + units.get(thread_num).get_ip() + ":8080/iss/view?type=delivery-in&unit=&testSuite=&testSet=&testEvent=";
 		driver.get(url);
 		
 		//select the checkbox
-		if ( !driver.findElement(By.name(units.get(thread_num).get_serial() +".xml")).isSelected() )
-		{
+		if (!driver.findElement(By.name(units.get(thread_num).get_serial() +".xml")).isSelected()) {
 		     driver.findElement(By.name(units.get(thread_num).get_serial() +".xml")).click();
 		}
 		
 		//click start test
 		driver.findElement(By.xpath("/html/body/form/input[@value='Start Test']")).click();
-		
-	}
-	
-	public void check_out_unit() {
-		
-	}
-	
-	public void retest_unit() {
-		
-	}
-	
-	public void monitor_test() {
-		String url = "http://" + units.get(thread_num).get_ip() +":8080/iss/view?type=viewer&unit=&testSuite=&testSet=&testEvent=&vt=0";
-		driver.get(url);
 		try {
-			Thread.sleep(1000);
+			Thread.sleep((units.size() * units.size() * 1000) + 3000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+	}
+	
+	public synchronized void check_out_unit() {
+		String url = "http://" + units.get(thread_num).get_ip() + ":8080/iss/view?type=delivery-out";
 		driver.get(url);
+		List<WebElement> finished_units = driver.findElements(By.name(units.get(thread_num).get_serial() +".xml"));
+
+		//select the checkbox
+		if (!finished_units.get(1).isSelected()) {		
+			finished_units.get(1).click();
+		}
 		
-		System.out.println(driver.findElement(By.xpath("/html/body/form[1]/table/tbody/tr[2]/td[2]/center/b/a/font")).getText());
-		///html/body/form[1]/table/tbody/tr[2]/td[3]/font/a
-		///html/body/form[1]/table/tbody/tr[2]/td[3]/font/a
-		///html/body/form[1]/table/tbody/tr[2]/td[3]/font/a
+		try {
+			driver.findElement(By.xpath("/html/body/form/input")).click();
+			Thread.sleep(1000);
+			Alert alert = driver.switchTo().alert();
+		    String alertText = alert.getText();
+		    System.out.println("Alert data: " + alertText);
+		    alert.accept();
+			
+			Thread.sleep((units.size() * 1000) + 3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			System.out.println("testing");
+			e.printStackTrace();
+		}
 		
+				
+	}
+	
+	public void retest_unit() {
+		String url = "http://" + units.get(thread_num).get_ip() + ":8080/iss/view?type=delivery-out";
+		driver.get(url);
+		List<WebElement> finished_units = driver.findElements(By.name(units.get(thread_num).get_serial() +".xml"));
+
+		//select the checkbox
+		if (!finished_units.get(2).isSelected()) {		
+			finished_units.get(2).click();
+		}
+		
+		//click retest on check-out
+		try {
+			driver.findElement(By.xpath("/html/body/form/input")).click();
+			Thread.sleep(1000);
+			
+			Thread.sleep((units.size() * 1000) + 3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			System.out.println("testing");
+			e.printStackTrace();
+		}
+		
+		//
+		
+	}
+	
+	public void disable_popup() {
+		
+		try {
+			String line;
+			String unit_path = "/export/home/domain/iss/units/" + units.get(thread_num).get_serial() + "/unit.properties";
+			String list_path = "/export/home/domain/iss/units/" + units.get(thread_num).get_serial() + "/test_suite_" + units.get(thread_num).get_test_seq().get(seq_loop) + "/list.properties";
+			FileReader unit_input;
+			unit_input = new FileReader(unit_path);
+			BufferedReader unit_input_file = new BufferedReader(unit_input);
+
+			String hba_loc_pattern="HBA_Location=(.*)";
+			Pattern hba_loc_p = Pattern.compile(hba_loc_pattern);
+			while ((line = unit_input_file.readLine()) != null) {
+				Matcher hba_loc_m = hba_loc_p.matcher(line);
+				if (hba_loc_m.matches()) {
+					if (hba_loc_m.group(1).equals(units.get(thread_num).get_hba_loc())) {
+						
+					}
+				}
+				
+			}
+			
+			unit_input_file.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// open list.properties and unit.properties
+		
+	}
+	
+	public String monitor_test() throws InterruptedException {
+		
+		String url = "http://" + units.get(thread_num).get_ip() +":8080/iss/view?type=viewer&unit=&testSuite=&testSet=&testEvent=&vt=0";
+		
+		
+		while (true) {
+			while (!driver.getCurrentUrl().equals(url)) {
+				driver.get(url);
+				driver.get(url);
+				System.out.println("Unit" + thread_num + " Loading iss/view completed");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			int unit_row_num = driver.findElements(By.xpath("/html/body/form[1]/table/tbody/tr")).size();
+			String result;
+			int search_check = 0;
+			for (int i = 2; i <= unit_row_num; i++) {
+				String web_serial = driver.findElement(By.xpath("/html/body/form[1]/table/tbody/tr[" + i + "]/td[3]/font/a")).getText();
+				String unit_serial = units.get(thread_num).get_serial();
+				
+				if (web_serial.equals(unit_serial)) {
+					search_check = 1;
+					result = driver.findElement(By.xpath("/html/body/form[1]/table/tbody/tr[" + i + "]/td[2]/center/b/a/font")).getText();
+					if (result.equals("Testing") || result.equals("Failing")) {
+						// test is still running.
+						// wait 15 secs and 
+						//
+						Thread.sleep(5000);
+						System.out.println("Unit" + thread_num + "Sleep 5sec"); 
+					} else if (result.equals("Passes")) {
+						return "Passes";
+					} else if (result.equals("Aborted")) {
+						return "Aborted";						
+					} else if (result.equals("Failed")) {
+						return "Failed";
+					} else {
+						System.out.println("Unit" + thread_num + "return-2");
+						return "Error2";
+					}
+					break;
+				}
+			}
+			if (search_check == 0) {
+				System.out.println("Unit" + thread_num + "return-1"); 
+				return "Error1";
+			}
+		}
+				
 	}
 	
 }

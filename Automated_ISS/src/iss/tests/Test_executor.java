@@ -28,7 +28,21 @@ public class Test_executor implements Runnable {
 	    	while (seq_loop < units.get(thread_num).get_total_test_seq()) { 	    	  
 	    		
 	    		Test_profile test_profile = new Test_profile(thread_name, thread_num, units, seq_loop);
-	    		test_profile.Test_profile_exec();	  		
+	    		test_profile.Test_profile_exec();	
+	    		String test_result = test_profile.get_result();
+	    		if (test_result.equals("Passes")) {
+	    			
+	    		} else if (test_result.equals("Failed")) {
+	    			
+	    		} else if (test_result.equals("Aborted")) {
+	    			break;
+	    		} else if (test_result.equals("Error1")) {
+	    			break;
+	    		} else if (test_result.equals("Error2")) {
+	    			break;
+	    		} else {
+	    			break;
+	    		}
 	  			
 	    		Thread.sleep(500);
 	  			seq_loop++;
