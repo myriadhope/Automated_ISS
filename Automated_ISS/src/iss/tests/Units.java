@@ -23,6 +23,8 @@ public class Units {
 	private String part_num;
 	private String encl_11s;
 	private String hba_loc;
+	private List<String> popup_loc_hba;
+	private List<String> popup_loc_bbu;
 	private List<String> test_seq;
 	
 	public Units() {
@@ -49,6 +51,7 @@ public class Units {
 	}
 	
 	public void add_id(String id) {
+		//operator id
 		this.id = id;		
 	}
 	public void add_part_num(String part_num) {

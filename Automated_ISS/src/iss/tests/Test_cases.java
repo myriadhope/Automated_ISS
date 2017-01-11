@@ -4,8 +4,11 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -231,36 +234,95 @@ public class Test_cases {
 		
 	}
 	
-	public void disable_popup() {
+	public void disable_HBA_popup() {
+		
 		
 		try {
+			//modify unit.properties and list.properties
 			String line;
 			String unit_path = "/export/home/domain/iss/units/" + units.get(thread_num).get_serial() + "/unit.properties";
+			String unit_path_tmp = "/export/home/domain/iss/units/" + units.get(thread_num).get_serial() + "/unit.properties.tmp";
 			String list_path = "/export/home/domain/iss/units/" + units.get(thread_num).get_serial() + "/test_suite_" + units.get(thread_num).get_test_seq().get(seq_loop) + "/list.properties";
-			FileReader unit_input;
-			unit_input = new FileReader(unit_path);
+			String list_path_tmp = "/export/home/domain/iss/units/" + units.get(thread_num).get_serial() + "/test_suite_" + units.get(thread_num).get_test_seq().get(seq_loop) + "/list.properties.tmp";
+			FileReader unit_input  = new FileReader(unit_path);
+			FileWriter unit_output = new FileWriter(unit_path_tmp);
+			
 			BufferedReader unit_input_file = new BufferedReader(unit_input);
+			BufferedWriter unit_output_file = new BufferedWriter(unit_output);
 
 			String hba_loc_pattern="HBA_Location=(.*)";
 			Pattern hba_loc_p = Pattern.compile(hba_loc_pattern);
+			int match_flag = 0;
 			while ((line = unit_input_file.readLine()) != null) {
 				Matcher hba_loc_m = hba_loc_p.matcher(line);
 				if (hba_loc_m.matches()) {
 					if (hba_loc_m.group(1).equals(units.get(thread_num).get_hba_loc())) {
 						
+					} else {
+						line = "HBA_Location=" + units.get(thread_num).get_hba_loc();
 					}
-				}
+					match_flag = 1;
+				} 
+				
+				unit_output.write(line);
 				
 			}
-			
+			if (match_flag == 0) {
+				unit_output.write("HBA_Location=" + units.get(thread_num).get_hba_loc());
+			}
 			unit_input_file.close();
+			unit_output_file.close();
+			
+			File oldFile = new File(unit_path);
+			oldFile.delete();
+			File newFile = new File(unit_path_tmp);
+			newFile.renameTo(oldFile);
+			
+			line = "";
+			FileReader list_input  = new FileReader(list_path);
+			FileWriter list_output = new FileWriter(list_path_tmp);
+			
+			BufferedReader list_input_file = new BufferedReader(list_input);
+			BufferedWriter list_output_file = new BufferedWriter(list_output);
+
+			hba_loc_pattern="HBA_Location=(.*)";
+			hba_loc_p = Pattern.compile(hba_loc_pattern);
+			match_flag = 0;
+			while ((line = unit_input_file.readLine()) != null) {
+				Matcher hba_loc_m = hba_loc_p.matcher(line);
+				if (hba_loc_m.matches()) {
+					if (hba_loc_m.group(1).equals(units.get(thread_num).get_hba_loc())) {
+						
+					} else {
+						line = "HBA_Location=" + units.get(thread_num).get_hba_loc();
+					}
+					match_flag = 1;
+				} 
+				
+				list_output.write(line);
+				
+			}
+			if (match_flag == 0) {
+				list_output.write("HBA_Location=" + units.get(thread_num).get_hba_loc());
+			}
+			list_input_file.close();
+			list_output_file.close();
+			
+			oldFile = new File(list_path);
+			oldFile.delete();
+			newFile = new File(list_path_tmp);
+			newFile.renameTo(oldFile);
+			
+			
+			//modify attribute.
+			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		// open list.properties and unit.properties
+		
 		
 	}
 	
